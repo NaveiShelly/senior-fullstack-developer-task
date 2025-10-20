@@ -148,3 +148,21 @@ As a bonus, enhance the user interface:
 - Redesign the navigation bar to make it more modern and user-friendly.
 - You may use UI libraries such as **Vuetify** or others.
 - Feel free to introduce additional UI enhancements that improve the user experience.
+
+---
+
+## Nave Shelly Submission
+
+## Implementation Summary
+
+- Database: Introduced a migration to replace `users.role` (TEXT) and `status` (INTEGER) with `users.roles` (JSON string) and `status` (TEXT: `Enabled` | `Disabled` | `Deleted`). The migration is reversible and works on fresh or previously migrated databases.
+- Backend: Updated the `User` entity to use `simple-json` for roles and a string status. Added status validation so `Deleted` users receive HTTP 401. Existing login endpoint (`POST /users/login/:username`) returns the user; the root route is protected by an auth guard that reads the username from the `token` header (demo only).
+- Frontend: All HTTP calls and state flow through Vuex. Role-based routing is enforced via router `meta.allowedRoles`. The username is displayed on Home, Editor, and Admin views. Vite dev server proxies `/api` to the backend.
+
+## Suggested Improvements
+
+- Authentication: Replace the demo `token` header approach with a real auth mechanism (e.g., JWT or session) and CSRF protection if needed.
+- Validation: Add DTOs and class-validator pipes on the backend for stronger input validation (e.g., login payloads), even if the current flow is username-only.
+- Persistence: Optionally persist minimal auth state on the client (e.g., localStorage) to survive reloads; rehydrate on app mount.
+- Observability: Add structured logging and basic error handling middleware to improve debuggability.
+

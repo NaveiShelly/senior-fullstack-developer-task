@@ -6,9 +6,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
-
-const username = ref("")
+// Read username from Vuex
+import { computed } from "vue"
+import { useStore } from "vuex"
+// Store access for template
+const store = useStore()
+const username = computed(() => store.getters.username)
 </script>
 
 <style scoped>

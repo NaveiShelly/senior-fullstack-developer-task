@@ -10,29 +10,25 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
-import axios from "axios"
+import { useStore } from "vuex"
 
 const router = useRouter()
+// Use Vuex for login
+const store = useStore()
+
 const username = ref("")
-const error = ref("")
+// Expose login error from store
+const error = computed(() => store.getters.error)
 
 const handleLogin = async () => {
 	try {
-		error.value = ""
-
-		const response = await axios.post(`/api/users/login/${username.value}`)
-
-		if (response.data) {
-			router.push({
-				path: "/home",
-				query: { username: username.value },
-			})
-		}
+        // Dispatch login then route to Home
+        await store.dispatch('login', username.value.trim())
+        router.push('/home')
 	} catch (err) {
-		error.value =
-			err.response?.data?.message || "Login failed. Please try again."
+		console.error('Login failed:', err)
 	}
 }
 </script>

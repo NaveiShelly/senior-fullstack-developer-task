@@ -13,7 +13,8 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException(`The user - ${username} - not found`);
     }
-
+    // api call to validate the user
+    await this.usersService.validateUserStatus(user);
     return user;
   }
 }
